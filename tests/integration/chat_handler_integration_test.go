@@ -12,9 +12,13 @@ import (
 
 	"github.com/RodrigoGuerraCortes/ai-backend/internal/ai"
 	"github.com/RodrigoGuerraCortes/ai-backend/internal/http/router"
+
+	"github.com/joho/godotenv"
 )
 
 func TestChatIntegration(t *testing.T) {
+	_ = godotenv.Load(".env")
+
 	// Given real Gemini client
 	geminiClient := ai.NewGeminiClient()
 

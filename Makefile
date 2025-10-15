@@ -1,4 +1,4 @@
-.PHONY: tests run tidy
+.PHONY: tests run tidy integration-test
 
 # ==== Environment Variables ====
 export GEMINI_API_KEY := $(shell grep GEMINI_API_KEY .env | cut -d '=' -f2)
@@ -22,3 +22,13 @@ run:
 # Tidy dependencies
 tidy:
 	go mod tidy
+
+
+# Test de integrations
+integration-test:
+	@echo "🔗 Running integration tests..."
+	@if [ -z "$(GEMINI_API_KEY)" ]; then \
+		echo "❌ Error: GEMINI_API_KEY is missing in .env file"; \
+		exit 1; \
+	fi
+	GEMINI_API_KEY=$(GEMINI_API_KEY) go test ./tests/integration -tags=integration -v
