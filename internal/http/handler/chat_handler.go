@@ -13,9 +13,9 @@ type ChatHandler struct {
 	chatService *service.ChatService
 }
 
-func NewChatHandler(gemini *ai.GeminiClient) *ChatHandler {
+func NewChatHandler(ai ai.AIClient) *ChatHandler {
 	return &ChatHandler{
-		chatService: service.NewChatService(gemini),
+		chatService: service.NewChatService(ai),
 	}
 }
 
@@ -23,15 +23,26 @@ func (h *ChatHandler) Chat(c *gin.Context) {
 	var req dto.ChatRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		c.JSON(http.StatusBadRequest, dto.ErrorResponse{
+			Success: false,
+			Error:   "Invalid request body",
+		})
 		return
 	}
 
-	response, err := h.chatService.Chat(c, req.Message)
+	reply, err := h.chatService.Chat(c, req.Message)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, dto.ErrorResponse{
+			Success: false,
+			Error:   err.Error(),
+		})
 		return
 	}
 
-	c.JSON(http.StatusOK, dto.ChatResponse{Reply: response})
+	c.JSON(http.StatusOK, dto.SuccessResponse{
+		Success: true,
+		Data: gin.H{
+			"reply": reply,
+		},
+	})
 }
