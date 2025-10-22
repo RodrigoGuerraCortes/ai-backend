@@ -75,4 +75,5 @@ jobs:
 
       - name: Verify Swagger docs are up to date
         run: |
+          git restore coverage.out || true
           git diff --exit-code || (echo "❌ Swagger docs out of date. Run 'make swagger' and commit changes." && exit 1)
