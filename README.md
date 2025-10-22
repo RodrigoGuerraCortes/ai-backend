@@ -170,7 +170,7 @@ make integration-test
 
 **Rodrigo Guerra Cortés**
 Full Stack Developer | Chile 🇨🇱
-📧 [[your.email@example.com](mailto:rguerracortes@gmail.com)]
+📧 [[rguerracortes@gmail.com](mailto:rguerracortes@gmail.com)]
 🌐 [LinkedIn](https://linkedin.com/in/rodrigoguerracortes)
 
 ---
