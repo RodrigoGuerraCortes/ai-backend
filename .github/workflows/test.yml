@@ -67,3 +67,12 @@ jobs:
             coverage.out
             coverage.html
             coverage.txt
+
+      - name: Generate Swagger docs
+        run: |
+            go install github.com/swaggo/swag/cmd/swag@v1.8.12
+            swag init -g cmd/api/main.go -o internal/http/docs
+
+      - name: Verify Swagger docs are up to date
+        run: |
+          git diff --exit-code || (echo "❌ Swagger docs out of date. Run 'make swagger' and commit changes." && exit 1)

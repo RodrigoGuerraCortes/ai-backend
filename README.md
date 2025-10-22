@@ -134,6 +134,24 @@ make integration-test
 
 ---
 
+## ⚙️ Continuous Integration (CI/CD)
+
+This project uses **GitHub Actions** for automated testing and coverage enforcement.
+
+### 🧪 What’s automated
+
+| Step | Description |
+|------|--------------|
+| ✅ Unit tests | Runs `go test ./...` with coverage |
+| 📈 Coverage report | Enforces a minimum 60% threshold |
+| ☁️ Coveralls upload | Publishes live coverage metrics |
+| 🏷️ Badges | README automatically shows build & coverage status |
+
+The pipeline runs on each **push** or **pull request** to `main` or `master` branches.
+
+
+---
+
 ## 🧰 Makefile Commands
 
 | Command                 | Description                |
@@ -171,9 +189,9 @@ make integration-test
 
 ## 👨‍💻 Author
 
-**Rodrigo Guerra Cortés**
-Full Stack Developer | Chile 🇨🇱
-📧 [[rguerracortes@gmail.com](mailto:rguerracortes@gmail.com)]
+**Rodrigo Guerra Cortés**  
+Full Stack Developer | Go, Laravel & Clean Architecture | Chile 🇨🇱  
+📧 [rguerracortes@gmail.com](mailto:rguerracortes@gmail.com)  
 🌐 [LinkedIn](https://linkedin.com/in/rodrigoguerracortes)
 
 ---

@@ -93,3 +93,13 @@ integration-test:
 		exit 1; \
 	fi
 	GEMINI_API_KEY=$(GEMINI_API_KEY) go test ./tests/integration -tags=integration -v
+
+# Api Documentation
+SWAG_VERSION := v1.8.12
+
+swagger:
+	@echo "🚀 Installing swag $(SWAG_VERSION) if not present..."
+	go install github.com/swaggo/swag/cmd/swag@$(SWAG_VERSION)
+	@echo "🧠 Generating Swagger documentation..."
+	swag init -g cmd/api/main.go -o internal/http/docs
+	@echo "✅ Swagger docs generated at internal/http/docs"

@@ -1,0 +1,58 @@
+definitions:
+  dto.ChatRequest:
+    properties:
+      message:
+        minLength: 3
+        type: string
+    required:
+    - message
+    type: object
+  dto.ChatResponse:
+    properties:
+      reply:
+        type: string
+    type: object
+  dto.ErrorResponse:
+    properties:
+      error:
+        type: string
+      success:
+        type: boolean
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Backend API for AI interactions using Gemini models.
+  title: API Backend IA
+  version: "1.0"
+paths:
+  /api/v1/chat:
+    post:
+      consumes:
+      - application/json
+      description: Sends a message to the Gemini AI model and returns the response
+      parameters:
+      - description: Chat message input
+        in: body
+        name: message
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ChatRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ChatResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: AI chat endpoint
+      tags:
+      - chat
+schemes:
+- http
+- https
+swagger: "2.0"

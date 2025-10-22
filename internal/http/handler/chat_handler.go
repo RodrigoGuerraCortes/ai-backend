@@ -19,6 +19,16 @@ func NewChatHandler(ai ai.AIClient) *ChatHandler {
 	}
 }
 
+// Chat godoc
+// @Summary      AI chat endpoint
+// @Description  Sends a message to the Gemini AI model and returns the response
+// @Tags         chat
+// @Accept       json
+// @Produce      json
+// @Param        message  body  dto.ChatRequest  true  "Chat message input"
+// @Success      200  {object}  dto.ChatResponse
+// @Failure      400  {object}  dto.ErrorResponse
+// @Router       /api/v1/chat [post]
 func (h *ChatHandler) Chat(c *gin.Context) {
 	var req dto.ChatRequest
 
