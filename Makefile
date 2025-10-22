@@ -34,9 +34,55 @@ tidy:
 	go mod tidy
 
 
-coverage:  ## Reporte de cobertura
-	go test ./... -coverprofile=coverage.out
-	go tool cover -func=coverage.out
+# ===== Coverage =====
+COVER_OUT := coverage.out
+COVER_HTML := coverage.html
+
+# Detect OS opener
+UNAME_S := $(shell uname)
+ifeq ($(UNAME_S),Darwin)
+  OPEN := open
+else
+  OPEN := xdg-open
+endif
+
+## Unit test coverage (excluye tests con tag 'integration')
+coverage:
+	@echo "🧪 Running unit tests with coverage..."
+	go test ./... -tags='' -covermode=atomic -coverpkg=./... -coverprofile=$(COVER_OUT)
+
+## Genera HTML y lo abre
+coverage-html: coverage
+	@echo "🧮 Generating HTML report..."
+	go tool cover -html=$(COVER_OUT) -o $(COVER_HTML)
+	@echo "📄 Report: $(COVER_HTML)"
+	-@$(OPEN) $(COVER_HTML) >/dev/null 2>&1 || true
+
+## Solo abre el HTML si ya existe
+coverage-open:
+	@echo "📄 Opening $(COVER_HTML)..."
+	-@$(OPEN) $(COVER_HTML) >/dev/null 2>&1 || (echo "Run 'make coverage-html' first"; exit 1)
+
+## Limpia artefactos de coverage
+coverage-clean:
+	@rm -f $(COVER_OUT) $(COVER_HTML)
+	@echo "🧹 Coverage artifacts removed."
+
+## (Opcional) Incluir también tests con tag 'integration' (requiere GEMINI_API_KEY)
+coverage-all:
+	@echo "🧪 Running ALL tests (unit + integration) with coverage..."
+	GEMINI_API_KEY=$(GEMINI_API_KEY) go test ./... -tags=integration -covermode=atomic -coverpkg=./... -coverprofile=$(COVER_OUT)
+	@echo "🧮 Generating HTML report..."
+	go tool cover -html=$(COVER_OUT) -o $(COVER_HTML)
+	-@$(OPEN) $(COVER_HTML) >/dev/null 2>&1 || true
+
+# ===== Coverage threshold =====
+COVER_MIN := 60.0
+
+coverage-check: coverage
+	@total=$$(go tool cover -func=$(COVER_OUT) | grep total: | awk '{print $$3}' | sed 's/%//'); \
+	echo "Total coverage: $$total%"; \
+	awk 'BEGIN{if ('"$$total"' < '"$(COVER_MIN)"') {print "❌ Coverage below $(COVER_MIN)%"; exit 1} else {print "✅ Coverage OK"} }'
 
 
 # Test de integrations

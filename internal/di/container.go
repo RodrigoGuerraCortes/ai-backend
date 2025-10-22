@@ -28,7 +28,7 @@ func New(logger *zap.Logger) *Container {
 	cfg := config.LoadConfig()
 
 	// 2) AI client (implements ai.AIClient)
-	aiClient := ai.NewGeminiClient()
+	aiClient := ai.NewGeminiClient(cfg.GeminiAPIKey)
 
 	// 3) HTTP router (inject AI interface)
 	r := appRouter.NewRouter(aiClient)

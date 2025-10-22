@@ -6,6 +6,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/RodrigoGuerraCortes/ai-backend/internal/config"
 	"github.com/RodrigoGuerraCortes/ai-backend/internal/di"
 	"github.com/RodrigoGuerraCortes/ai-backend/pkg/logger"
 	"go.uber.org/zap"
@@ -13,8 +14,8 @@ import (
 
 func main() {
 
-	logger.Init()
-	defer logger.Sync()
+	cfg := config.LoadConfig()
+	logger.InitWith(cfg.Environment, cfg.LogLevel)
 	log := logger.Log
 
 	log.Info("🚀 Starting AI Backend with Gemini + DI...")

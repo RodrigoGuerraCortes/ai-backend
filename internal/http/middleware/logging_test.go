@@ -5,6 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/RodrigoGuerraCortes/ai-backend/internal/config"
 	"github.com/RodrigoGuerraCortes/ai-backend/internal/http/middleware"
 	"github.com/RodrigoGuerraCortes/ai-backend/pkg/logger"
 	"github.com/gin-gonic/gin"
@@ -15,7 +16,9 @@ func TestRequestLogger(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 
 	// 🧠 Initialize zap before using middleware
-	logger.Init()
+
+	cfg := config.LoadConfig()
+	logger.InitWith(cfg.Environment, cfg.LogLevel)
 	defer logger.Sync()
 
 	// Track if handler executed

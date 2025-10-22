@@ -1,0 +1,52 @@
+name: Go CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Cache Go modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Tidy
+        run: go mod tidy
+
+      - name: Run unit tests with coverage
+        run: |
+          go test ./... -tags='' -covermode=atomic -coverpkg=./... -coverprofile=coverage.out
+          go tool cover -func=coverage.out | tee coverage.txt
+          go tool cover -html=coverage.out -o coverage.html
+
+      - name: Enforce coverage threshold (60%)
+        run: |
+          total=$(grep total: coverage.txt | awk '{print $3}' | sed 's/%//')
+          echo "Total coverage: $total%"
+          awk 'BEGIN{ if ('"$total"' < 60.0) {print "❌ Coverage below 60%"; exit 1} else {print "✅ Coverage OK"} }'
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: |
+            coverage.out
+            coverage.html
+            coverage.txt

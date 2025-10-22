@@ -1,24 +1,15 @@
 package logger
 
 import (
-	"github.com/RodrigoGuerraCortes/ai-backend/config"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
 
 var Log *zap.Logger
 
-func Init() {
-
-	config.LoadEnv()
-	env := config.GetEnv("ENV")
-	logLevel := config.GetEnv("LOG_LEVEL")
-
-	// Default level = info
+func InitWith(env, levelStr string) {
 	level := zapcore.InfoLevel
-	if logLevel != "" {
-		_ = level.Set(logLevel)
-	}
+	_ = level.Set(levelStr)
 
 	var cfg zap.Config
 

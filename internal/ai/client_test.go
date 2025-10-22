@@ -4,10 +4,13 @@ import (
 	"testing"
 
 	"github.com/RodrigoGuerraCortes/ai-backend/internal/ai"
+	"github.com/RodrigoGuerraCortes/ai-backend/internal/config"
 )
 
 func TestGeminiClientConnection(t *testing.T) {
-	client := ai.NewGeminiClient()
+	cfg := config.LoadConfig()
+
+	client := ai.NewGeminiClient(cfg.GeminiAPIKey)
 	err := client.TestConnection()
 
 	if err != nil {

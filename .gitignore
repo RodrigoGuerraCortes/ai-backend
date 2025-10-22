@@ -1,2 +1,4 @@
 .env
 vendor/
+coverage.out
+coverage.html

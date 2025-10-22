@@ -5,7 +5,6 @@ import (
 	"errors"
 	"log"
 
-	"github.com/RodrigoGuerraCortes/ai-backend/config"
 	"github.com/google/generative-ai-go/genai"
 	"google.golang.org/api/option"
 )
@@ -14,9 +13,10 @@ type GeminiClient struct {
 	Client *genai.Client
 }
 
-func NewGeminiClient() *GeminiClient {
-	config.LoadEnv()
-	apiKey := config.GetEnv("GEMINI_API_KEY")
+func NewGeminiClient(gemeniAPIKey string) *GeminiClient {
+
+	apiKey := gemeniAPIKey
+
 	if apiKey == "" {
 		log.Fatal("❌ Missing GEMINI_API_KEY in environment variables")
 	}
