@@ -34,6 +34,11 @@ tidy:
 	go mod tidy
 
 
+coverage:  ## Reporte de cobertura
+	go test ./... -coverprofile=coverage.out
+	go tool cover -func=coverage.out
+
+
 # Test de integrations
 integration-test:
 	@echo "🔗 Running integration tests..."

@@ -13,6 +13,7 @@ func NewRouter(aiClient ai.AIClient) *gin.Engine {
 
 	// Apply middlewares
 	r.Use(gin.Recovery()) // built-in panic recovery
+	r.Use(middleware.RequestIDMiddleware())
 	r.Use(middleware.RequestLogger())
 	r.Use(middleware.ErrorHandler())
 
@@ -21,6 +22,10 @@ func NewRouter(aiClient ai.AIClient) *gin.Engine {
 		chatHandler := handler.NewChatHandler(aiClient)
 		api.POST("/chat", chatHandler.Chat)
 	}
+
+	r.GET("/healthz", func(c *gin.Context) {
+		c.JSON(200, gin.H{"ok": true})
+	})
 
 	return r
 }

@@ -1,30 +1,37 @@
 package main
 
 import (
-	"github.com/RodrigoGuerraCortes/ai-backend/internal/container"
-	"github.com/RodrigoGuerraCortes/ai-backend/internal/http/router"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+
+	"github.com/RodrigoGuerraCortes/ai-backend/internal/di"
 	"github.com/RodrigoGuerraCortes/ai-backend/pkg/logger"
 	"go.uber.org/zap"
 )
 
 func main() {
+
 	logger.Init()
 	defer logger.Sync()
+	log := logger.Log
 
-	logger.Log.Info("🚀 Starting AI Backend with Gemini + DI...")
+	log.Info("🚀 Starting AI Backend with Gemini + DI...")
 
-	c := container.BuildContainer()
+	// Build container (inject logger instance)
+	c := di.New(log)
 
-	if err := c.AIClient.TestConnection(); err != nil {
-		logger.Log.Fatal("❌ Gemini connection failed", zap.Error(err))
+	// Start HTTP server (non-blocking)
+	if err := c.Start(); err != nil {
+		log.Fatal("server start failed", zap.Error(err))
 	}
 
-	r := router.NewRouter(c.AIClient)
-	port := ":" + c.Config.Port
+	// OS signal handling for graceful shutdown
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit // block until signal
 
-	logger.Log.Info("✅ Server starting", zap.String("port", port))
-
-	if err := r.Run(port); err != nil {
-		logger.Log.Fatal("❌ Failed to start server", zap.Error(err))
-	}
+	log.Info("🔻 Shutdown signal received, stopping...")
+	c.Stop(10 * time.Second)
 }
