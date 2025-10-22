@@ -1,3 +1,6 @@
+# AI Backend
+[![Coverage Status](https://coveralls.io/repos/github/RodrigoGuerraCortes/ai-backend/badge.svg)](https://coveralls.io/github/RodrigoGuerraCortes/ai-backend)
+[![Go CI](https://github.com/RodrigoGuerraCortes/ai-backend/actions/workflows/test.yml/badge.svg)](https://github.com/RodrigoGuerraCortes/ai-backend/actions/workflows/test.yml)
 
 
 # 🧠 AI Backend (Clean Architecture · Go + Gemini)

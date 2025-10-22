@@ -13,6 +13,7 @@ jobs:
       ENV: "test"
       LOG_LEVEL: "info"
       CI: "true"
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -41,12 +42,23 @@ jobs:
           go tool cover -func=coverage.out | tee coverage.txt
           go tool cover -html=coverage.out -o coverage.html
 
+      # ✅ Subir reporte a Coveralls
+      - name: Upload to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: coverage.out
+          flag-name: unittests
+          parallel: false
+
+      # ✅ Validar cobertura mínima (60%)
       - name: Enforce coverage threshold (60%)
         run: |
           total=$(grep total: coverage.txt | awk '{print $3}' | sed 's/%//')
           echo "Total coverage: $total%"
           awk 'BEGIN{ if ('"$total"' < 60.0) {print "❌ Coverage below 60%"; exit 1} else {print "✅ Coverage OK"} }'
 
+      # ✅ Subir reportes como artefacto descargable
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
         with:
