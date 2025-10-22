@@ -1,6 +1,7 @@
 package ai_test
 
 import (
+	"os"
 	"testing"
 
 	"github.com/RodrigoGuerraCortes/ai-backend/internal/ai"
@@ -8,6 +9,11 @@ import (
 )
 
 func TestGeminiClientConnection(t *testing.T) {
+
+	if os.Getenv("CI") == "true" {
+		t.Skip("Skipping Gemini API test in CI environment")
+	}
+
 	cfg := config.LoadConfig()
 
 	client := ai.NewGeminiClient(cfg.GeminiAPIKey)

@@ -8,6 +8,11 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      ENV: "test"
+      LOG_LEVEL: "info"
+      CI: "true"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
