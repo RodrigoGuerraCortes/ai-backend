@@ -14,6 +14,16 @@ tests:
 	fi
 	GEMINI_API_KEY=$(GEMINI_API_KEY) go test ./... -v
 
+# Run tests
+tests-integration:
+	@echo "🔧 Running unit tests..."
+	@if [ -z "$(GEMINI_API_KEY)" ]; then \
+		echo "❌ Error: GEMINI_API_KEY is missing in .env file"; \
+		exit 1; \
+	fi
+	GEMINI_API_KEY=$(GEMINI_API_KEY) go test ./tests/integration/. -v -tags=integration
+
+
 # Run app
 run:
 	@echo "🚀 Starting API..."

@@ -1,27 +1,30 @@
 package main
 
 import (
-	"fmt"
-	"log"
-
-	"github.com/RodrigoGuerraCortes/ai-backend/internal/ai"
+	"github.com/RodrigoGuerraCortes/ai-backend/internal/container"
 	"github.com/RodrigoGuerraCortes/ai-backend/internal/http/router"
+	"github.com/RodrigoGuerraCortes/ai-backend/pkg/logger"
+	"go.uber.org/zap"
 )
 
 func main() {
-	fmt.Println("🚀 Starting AI Backend with Gemini + Gin...")
+	logger.Init()
+	defer logger.Sync()
 
-	// Init AI Client
-	geminiClient := ai.NewGeminiClient()
-	if err := geminiClient.TestConnection(); err != nil {
-		log.Fatalf("❌ Gemini connection failed: %v", err)
+	logger.Log.Info("🚀 Starting AI Backend with Gemini + DI...")
+
+	c := container.BuildContainer()
+
+	if err := c.AIClient.TestConnection(); err != nil {
+		logger.Log.Fatal("❌ Gemini connection failed", zap.Error(err))
 	}
 
-	// Create router and inject dependencies
-	r := router.NewRouter(geminiClient)
+	r := router.NewRouter(c.AIClient)
+	port := ":" + c.Config.Port
 
-	// Run server
-	if err := r.Run(":8080"); err != nil {
-		log.Fatalf("❌ Failed to start server: %v", err)
+	logger.Log.Info("✅ Server starting", zap.String("port", port))
+
+	if err := r.Run(port); err != nil {
+		logger.Log.Fatal("❌ Failed to start server", zap.Error(err))
 	}
 }
