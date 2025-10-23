@@ -127,7 +127,7 @@ jobs:
 
             echo "🏃 Running new container..."
             docker run -d -p 8080:8080 \
-              -e GEMINI_API_KEY='${{ secrets.GEMINI_API_KEY }}' \
+              -e GEMINI_API_KEY="${{ secrets.GEMINI_API_KEY }}" \
               --name ai-backend \
               --restart=always \
               ghcr.io/rodrigoguerracortes/ai-backend:latest
