@@ -77,6 +77,9 @@ jobs:
         run: |
           git restore coverage.out || true
           git diff --exit-code || (echo "❌ Swagger docs out of date. Run 'make swagger' and commit changes." && exit 1)
+      - name: Adjust Swagger server URL for production
+        run: |
+          sed -i "s|localhost:8080|${{ secrets.SERVER_HOST }}|g" internal/http/docs/swagger.json
   build-and-push:
     runs-on: ubuntu-latest
     needs: test  # solo corre si test pasa
