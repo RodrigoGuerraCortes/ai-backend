@@ -15,7 +15,7 @@ import (
 // @title API Backend IA
 // @version 1.0
 // @description Backend API for AI interactions using Gemini models.
-// @host localhost:8080
+// @host 161.153.200.7:8080
 // @schemes http https
 func main() {
 

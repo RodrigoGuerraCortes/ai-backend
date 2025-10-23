@@ -19,7 +19,7 @@ definitions:
       success:
         type: boolean
     type: object
-host: localhost:8080
+host: 161.153.200.7:8080
 info:
   contact: {}
   description: Backend API for AI interactions using Gemini models.
