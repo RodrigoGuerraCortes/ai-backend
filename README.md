@@ -163,6 +163,51 @@ The pipeline runs on each **push** or **pull request** to `main` or `master` bra
 
 ---
 
+## 🚀 Automated Deployment (CI/CD + Docker + Oracle Cloud)
+
+This backend is fully automated with a **CI/CD pipeline** built using **GitHub Actions**, **Docker**, and **Oracle Cloud Infrastructure (OCI)**.
+
+Each commit to `main` or `master` automatically:
+1. ✅ Runs unit and integration tests  
+2. 📘 Regenerates and validates Swagger documentation  
+3. 🐳 Builds and publishes a new Docker image to **GitHub Container Registry (GHCR)**  
+4. ☁️ Connects to a **remote VPS (CentOS 7)** on Oracle Cloud  
+5. 🔁 Deploys the latest container version automatically  
+
+The system uses environment secrets for full security (`GEMINI_API_KEY`, `GHCR_PAT`, `SERVER_HOST`, `SERVER_SSH_KEY`), ensuring zero manual intervention.
+
+---
+
+### 🧠 Architecture Overview
+
+```text
+ ┌────────────────────────────┐
+ │         Developer          │
+ │   git push origin master   │
+ └────────────┬───────────────┘
+              │
+              ▼
+ ┌────────────────────────────┐
+ │     GitHub Actions CI/CD   │
+ │────────────────────────────│
+ │ 🧪 Test + Coverage (Go)     │
+ │ 📘 Swagger build & verify   │
+ │ 🐳 Docker build & push      │
+ │ ☁️ Deploy via SSH to VPS    │
+ └────────────┬───────────────┘
+              │
+              ▼
+ ┌────────────────────────────┐
+ │    Oracle Cloud Instance   │
+ │────────────────────────────│
+ │ 🐳 Pulls latest GHCR image │
+ │ 🚀 Runs container ai-backend│
+ │ 🔑 Loads GEMINI_API_KEY     │
+ │ 🌐 Exposes :8080 (Swagger)  │
+ └────────────────────────────┘
+
+---
+
 ## 🧾 Roadmap
 
  Goal                                         |
