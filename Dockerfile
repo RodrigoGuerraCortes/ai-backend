@@ -18,7 +18,7 @@ FROM alpine:3.19
 
 WORKDIR /app
 COPY --from=builder /app/ai-backend .
-COPY .env .env
+#COPY .env .env
 
 EXPOSE 8080
 
