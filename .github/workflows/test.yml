@@ -81,7 +81,7 @@ jobs:
         env:
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
         run: |
-          sed -i "s|localhost:8080|$SERVER_HOST|g" internal/http/docs/swagger.json
+          sed -i "s|localhost:8080|$SERVER_HOST|g" internal/http/docs/docs.go
   build-and-push:
     runs-on: ubuntu-latest
     needs: test  # solo corre si test pasa
